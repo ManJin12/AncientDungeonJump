@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 32b21a9736127c54babb604e7c9a86ee
 ModelImporter:
-  serializedVersion: 19301
+  serializedVersion: 22200
   internalIDToNameTable:
   - first:
       74: -4740885419835397292
@@ -17,15 +17,12 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'idle_weapon' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'spine_02' has translation animation that
-      will be discarded.\n\t'spine_03' has translation animation that will be discarded.\n\t'lowerarm_l'
-      has translation animation that will be discarded.\n"
+    animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -37,7 +34,36 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: idle_weapon
+      takeName: idle_weapon
+      internalID: -4740885419835397292
+      firstFrame: 271
+      lastFrame: 321
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 270.9
     isReadable: 0
   meshes:
     lODScreenPercentages: []
@@ -46,27 +72,35 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
     fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
+    optimizeBones: 1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -309,8 +343,7 @@ ModelImporter:
     - name: lowerarm_twist_01_r
       parentName: lowerarm_r
       position: {x: 0.1459678, y: -0.0000014208777, z: 0.000005706915}
-      rotation: {x: -0.00000010803338, y: -0.00000004097818, z: -0.000000005820764,
-        w: 1}
+      rotation: {x: -0.00000010803338, y: -0.00000004097818, z: -0.000000005820764, w: 1}
       scale: {x: 0.9999998, y: 1.0000036, z: 1.0000042}
     - name: upperarm_twist_01_r
       parentName: upperarm_r
@@ -500,14 +533,12 @@ ModelImporter:
     - name: lowerarm_twist_01_l
       parentName: lowerarm_l
       position: {x: -0.1459669, y: 0.0000015883016, z: -0.000005629164}
-      rotation: {x: -0.00000010430811, y: -0.00000016391273, z: 0.000000013504174,
-        w: 1}
+      rotation: {x: -0.00000010430811, y: -0.00000016391273, z: 0.000000013504174, w: 1}
       scale: {x: 1.0000014, y: 1.0000062, z: 1.0000085}
     - name: upperarm_twist_01_l
       parentName: upperarm_l
       position: {x: -0.13950546, y: 0.0000021646306, z: 0.000006993665}
-      rotation: {x: 0.000000014901158, y: -0.00000011920926, z: 0.000000018626448,
-        w: 1}
+      rotation: {x: 0.000000014901158, y: -0.00000011920926, z: 0.000000018626448, w: 1}
       scale: {x: 0.9999998, y: 1.0000004, z: 1.0000007}
     - name: scabbard
       parentName: spine_03
@@ -517,8 +548,7 @@ ModelImporter:
     - name: sword_socket
       parentName: scabbard
       position: {x: -2.2026825e-15, y: 0.18015543, z: 1.7941204e-15}
-      rotation: {x: 0.00000005960463, y: -0.000000014901158, z: -0.00000005960463,
-        w: 1}
+      rotation: {x: 0.00000005960463, y: -0.000000014901158, z: -0.00000005960463, w: 1}
       scale: {x: 1, y: 0.9999997, z: 0.9999996}
     - name: sword
       parentName: scabbard
@@ -637,6 +667,9 @@ ModelImporter:
   animationType: 2
   humanoidOversampling: 1
   avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
