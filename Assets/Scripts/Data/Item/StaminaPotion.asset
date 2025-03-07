@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 525b8ac530324574ba8d047bd8b3da07, type: 3}
+  m_Name: StaminaPotion
+  m_EditorClassIdentifier: 
+  objectName: "\uC2A4\uD14C\uBBF8\uB098 \uD68C\uBCF5 \uD3EC\uC158"
+  objectDescription: "\uC2A4\uD14C\uBBF8\uB098\uB97C \uCD5C\uB300\uB85C \uD68C\uBCF5\uD569\uB2C8\uB2E4"
+  EItemType: 2
+  icon: {fileID: 21300000, guid: 6455870fc2ec35d46852e1b9b166afdb, type: 3}
+  value: 100
+  maxStackAmount: 3
+  canStack: 1

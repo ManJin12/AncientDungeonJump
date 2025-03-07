@@ -8,11 +8,14 @@ public class PlayerController : MonoBehaviour
 {
     [Header("MoveMent")]
     public float moveSpeed;
+    public float dashPower;
     public float stepHeight;
     private Vector2 curMovementInput;
     public float jumpPower;
     public LayerMask groundLayerMask;
     public LayerMask stairsLayerMask;
+    public bool isDash = false;
+    public bool isMoving = false;
 
     [Header("Look")]
     public Transform cameraPosition;
@@ -30,11 +33,15 @@ public class PlayerController : MonoBehaviour
     private float lastGroundTime;
     private float jumpDelay = 0.1f;
 
+    public UIInventory inventory;
+    private PlayerCondition condition;
+
 
     private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
+        condition = GetComponent<PlayerCondition>();
     }
 
     private void FixedUpdate()
@@ -47,7 +54,7 @@ public class PlayerController : MonoBehaviour
     {
         DebugGroundCheck();
         CheckJumpState();
-
+        MoveAnimController();
     }
     private void LateUpdate()
     {
@@ -74,20 +81,58 @@ public class PlayerController : MonoBehaviour
         if (context.phase == InputActionPhase.Performed)
         {
             curMovementInput = context.ReadValue<Vector2>();
-            anim.SetBool("IsWalk", true);
+            isMoving = true;
+            
         }
         else if(context.phase == InputActionPhase.Canceled)
         {
             curMovementInput = Vector2.zero;
+            isMoving = false;
+        }
+    }
+
+    public void OnDashInput(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
+        {
+            isDash = true;
+        }
+        else if (context.phase == InputActionPhase.Canceled)
+        {
+            isDash = false;
+        }
+    }
+
+    private void MoveAnimController()
+    {
+        if (isMoving && isDash && condition.Run)
+        {
+            anim.SetBool("IsRun", true);
             anim.SetBool("IsWalk", false);
         }
-       
+        else if(isMoving && isDash && !condition.Run)
+        {
+            anim.SetBool("IsWalk", true);
+            anim.SetBool("IsRun", false);
+        }
+        else if(isMoving && !isDash && !condition.Run)
+        {
+            anim.SetBool("IsWalk", true);
+            anim.SetBool("IsRun", false);
+        }
+        else
+        {
+            anim.SetBool("IsRun", false);
+            anim.SetBool("IsWalk", false);
+        }
     }
+
 
     private void Move()
     {
         Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
-        dir *= moveSpeed;
+        float speed = condition.Run ? moveSpeed * dashPower : moveSpeed;
+        dir *= speed;
         dir.y = rigid.velocity.y;
 
         rigid.velocity = dir;
@@ -166,5 +211,32 @@ public class PlayerController : MonoBehaviour
                 isJumping = false; // 점프 상태 해제
             }
         }
+    }
+
+    public void OnInventoryButton(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.started)
+        {
+            string keyPressed = callbackContext.control.name; // 눌린 키의 이름 가져오기
+
+            switch (keyPressed)
+            {
+                case "1":
+                    inventory.UseItem(0);
+                    break;
+                case "2":
+                    inventory.UseItem(1);
+                    break;
+                case "3":
+                    inventory.UseItem(2);
+                    break;
+                case "4":
+                    inventory.UseItem(3);
+                    break;
+                case "5":
+                    inventory.UseItem(4);
+                    break;
+            }
+        }      
     }
 }

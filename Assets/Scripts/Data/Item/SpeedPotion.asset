@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 525b8ac530324574ba8d047bd8b3da07, type: 3}
+  m_Name: SpeedPotion
+  m_EditorClassIdentifier: 
+  objectName: "\uC18D\uB3C4 \uC99D\uAC00 \uD3EC\uC158"
+  objectDescription: "\uC774\uB3D9\uC18D\uB3C4\uAC00 \uBE68\uB77C\uC9D1\uB2C8\uB2E4."
+  EItemType: 1
+  icon: {fileID: 21300000, guid: ecb3c86838291514a8536e52c6c79ada, type: 3}
+  value: 1.5
+  duration: 5
+  maxStackAmount: 3
+  canStack: 1
