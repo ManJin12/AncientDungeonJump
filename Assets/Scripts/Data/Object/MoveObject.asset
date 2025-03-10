@@ -15,8 +15,8 @@ MonoBehaviour:
   objectName: "\uC6C0\uC9C1\uC774\uB294 \uBC1C\uD310"
   objectDescription: "5\uCD08\uB9C8\uB2E4 \uC55E\uB4A4\uB85C \uC6C0\uC9C1\uC785\uB2C8\uB2E4."
   EObjectType: 2
-  canMave: 0
-  moveSpeed: 10
+  canMave: 1
+  moveSpeed: 100
   loopMovement: 1
   loopTime: 5
   canJump: 0

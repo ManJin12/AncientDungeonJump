@@ -21,4 +21,4 @@ MonoBehaviour:
   loopMovement: 0
   loopTime: 0
   canJump: 1
-  jumpPower: 200
+  jumpPower: 300
