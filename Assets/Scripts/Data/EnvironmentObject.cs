@@ -21,4 +21,16 @@ public class EnvironmentObject : MonoBehaviour, IInteractable
     {
         CharacterManager.Instance.Player.objectData = objectData;
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            if(objectData.EObjectType == ObjectType.JumpPad)
+            {
+                collision.rigidbody.AddForce(Vector2.up * objectData.jumpPower, ForceMode.Impulse);
+            }
+        }
+
+    }
 }

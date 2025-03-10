@@ -13,19 +13,14 @@ public class PlayerController : MonoBehaviour
     private Vector2 curMovementInput;
     public float jumpPower;
     public LayerMask groundLayerMask;
-    public LayerMask stairsLayerMask;
     public bool isDash = false;
     public bool isMoving = false;
 
     [Header("Look")]
-    public Transform cameraPosition;
-    public float minXLook;
-    public float maxXLook;
-    private float camCurXRot;
-    private float camCurYRot;
-    public float lookSensitivity;
 
-    private Vector2 mouseDelta;
+    private Vector3 lookDir = Vector3.zero;
+
+
     private Rigidbody rigid;
     private Animator anim;
 
@@ -55,25 +50,6 @@ public class PlayerController : MonoBehaviour
         DebugGroundCheck();
         CheckJumpState();
         MoveAnimController();
-    }
-    private void LateUpdate()
-    {
-        Look();
-    }
-
-    public void OnLookInput(InputAction.CallbackContext context)
-    {
-        mouseDelta = context.ReadValue<Vector2>();
-    }
-
-    private void Look()
-    {
-        camCurXRot += mouseDelta.y * lookSensitivity;
-        camCurXRot = Mathf.Clamp(camCurXRot, minXLook, maxXLook);
-        cameraPosition.localEulerAngles = new Vector3(-camCurXRot, 0, 0);
-
-        camCurYRot += mouseDelta.x * lookSensitivity;
-        transform.eulerAngles = new Vector3(0, camCurYRot, 0);
     }
 
     public void OnMoveInput(InputAction.CallbackContext context)
@@ -130,7 +106,15 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
+        lookDir.x = curMovementInput.x;
+        lookDir.z = curMovementInput.y;
+
+        if (lookDir != Vector3.zero)
+        {
+            transform.forward = lookDir;
+        }
+
+        Vector3 dir = transform.forward * lookDir.z + transform.right * lookDir.x;
         float speed = condition.Run ? moveSpeed * dashPower : moveSpeed;
         dir *= speed;
         dir.y = rigid.velocity.y;
