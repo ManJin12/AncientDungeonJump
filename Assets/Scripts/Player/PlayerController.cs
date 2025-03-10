@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 lookDir = Vector3.zero;
     public float lookSpeed = 3f;
     private CameraMovement cameraMovement;
+    private bool toggleCameraRotation = false;
 
     private Rigidbody rigid;
     private Animator anim;
@@ -51,6 +52,14 @@ public class PlayerController : MonoBehaviour
         DebugGroundCheck();
         CheckJumpState();
         MoveAnimController();
+    }
+    private void LateUpdate()
+    {
+        if (cameraMovement.ECurrentCameraMode == CameraMode.ThirdPerson && toggleCameraRotation == false)
+        {
+            Vector3 playerRotate = Vector3.Scale(cameraMovement.realCamera.transform.forward, new Vector3(1, 0, 1));
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(playerRotate), Time.deltaTime * cameraMovement.smoothness);
+        }     
     }
 
     public void OnMoveInput(InputAction.CallbackContext context)
@@ -108,35 +117,31 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
+        Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
         float speed = condition.Run ? moveSpeed * dashPower : moveSpeed;
+        dir *= speed;
+        dir.y = rigid.velocity.y;
 
-        if (cameraMovement.ECurrentCameraMode == CameraMode.FirstPerson)
-        {
-            Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
+        rigid.velocity = dir;
 
-            dir *= speed;
-            dir.y = rigid.velocity.y;
+        // TopView일때 움직임 
+        // 카메라 위치에 따라 캐릭터의 앞 방향이 달라져야하는데 현재 게임과는 맞지 않아 다른 방식 사용
 
-            rigid.velocity = dir;
-        }
-        else
-        {
-            lookDir.x = curMovementInput.x;
-            lookDir.z = curMovementInput.y;
-            lookDir.Normalize();
+        //lookDir.x = curMovementInput.x;
+        //lookDir.z = curMovementInput.y;
+        //lookDir.Normalize();
 
-            if (lookDir != Vector3.zero)
-            {
-                if (Mathf.Sign(transform.forward.x) != Mathf.Sign(lookDir.x) || Mathf.Sign(transform.forward.z) != Mathf.Sign(lookDir.z))
-                {
-                    transform.Rotate(0, 1, 0);
-                }
+        //if (lookDir != Vector3.zero)
+        //{
+        //    if (Mathf.Sign(transform.forward.x) != Mathf.Sign(lookDir.x) || Mathf.Sign(transform.forward.z) != Mathf.Sign(lookDir.z))
+        //    {
+        //        transform.Rotate(0, 1, 0);
+        //    }
 
-                transform.forward = Vector3.Lerp(transform.forward, lookDir, lookSpeed * Time.deltaTime);
-            }
+        //    transform.forward = Vector3.Lerp(transform.forward, lookDir, lookSpeed * Time.deltaTime);
+        //}
 
-            rigid.MovePosition(transform.position + lookDir * speed * Time.deltaTime);
-        }
+        //rigid.MovePosition(transform.position + lookDir * speed * Time.deltaTime);
     }
 
     public void OnJumpInput(InputAction.CallbackContext context)
@@ -239,5 +244,17 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }      
+    }
+
+    public void OnRotationStop(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
+        {
+            toggleCameraRotation = true;
+        }
+        else if (context.phase == InputActionPhase.Canceled)
+        {
+            toggleCameraRotation = false;
+        }
     }
 }

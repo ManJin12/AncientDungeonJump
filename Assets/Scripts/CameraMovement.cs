@@ -22,7 +22,7 @@ public class CameraMovement : MonoBehaviour
     public Transform Player; // 캐릭터
 
     private Vector3 dirNormalized; // 초기 카메라 방향
-    private Vector3 finalDir; // 최종 카메라 방향
+    public Vector3 finalDir; // 최종 카메라 방향
 
     public float minDistance; // 카메라 최소 거리
     public float maxDistance; // 카메라 최대 거리
