@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -22,13 +23,24 @@ public class PlayerController : MonoBehaviour
     private CameraMovement cameraMovement;
     private bool toggleCameraRotation = false;
 
-    private Rigidbody rigid;
-    private Animator anim;
-
+    [Header("Jump")]
     public bool isJumping = false; // 점프 중인지 체크
     private float lastGroundTime;
     private float jumpDelay = 0.1f;
 
+    [Header("Wall")]
+    public float wallCheckDistance = 1.0f;
+    public LayerMask wallLayer;
+    public float grabHeightOffset = 1.5f;
+    public float wallOffsetDistance = 0.5f;
+    public bool wallCheck = false;
+
+    public float climbSpeed = 2.0f;
+    public bool isHanging = false;
+    public bool isClimbing = false;
+
+    private Rigidbody rigid;
+    private Animator anim;
     public UIInventory inventory;
     private PlayerCondition condition;
 
@@ -39,10 +51,17 @@ public class PlayerController : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         condition = GetComponent<PlayerCondition>();
         cameraMovement = GetComponentInChildren<CameraMovement>();
+        cameraMovement.playerController = this;
     }
 
     private void FixedUpdate()
     {
+        if (isHanging)
+        {
+            HandleClimbing();
+            return;
+        }
+
         Move();
     }
 
@@ -52,10 +71,11 @@ public class PlayerController : MonoBehaviour
         DebugGroundCheck();
         CheckJumpState();
         MoveAnimController();
+        TryGrabWall();
     }
     private void LateUpdate()
     {
-        if (cameraMovement.ECurrentCameraMode == CameraMode.ThirdPerson && toggleCameraRotation == false)
+        if (cameraMovement.ECurrentCameraMode == CameraMode.ThirdPerson && toggleCameraRotation == false && !isHanging)
         {
             Vector3 playerRotate = Vector3.Scale(cameraMovement.realCamera.transform.forward, new Vector3(1, 0, 1));
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(playerRotate), Time.deltaTime * cameraMovement.smoothness);
@@ -149,9 +169,17 @@ public class PlayerController : MonoBehaviour
         if(context.phase == InputActionPhase.Started && IsGrounded())
         {
             rigid.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
+            
             anim.SetTrigger("IsJump");
             isJumping = true;
             lastGroundTime = Time.time;
+        }
+
+        if(context.phase == InputActionPhase.Started && isHanging)
+        {
+            isHanging = false;
+            rigid.AddForce((Vector3.up) * jumpPower, ForceMode.Impulse);
+            Debug.Log(1);
         }
     }
     
@@ -203,7 +231,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void CheckJumpState()
+    private void CheckJumpState()
     {
         if (isJumping)
         {
@@ -217,6 +245,57 @@ public class PlayerController : MonoBehaviour
                 isJumping = false; // 점프 상태 해제
             }
         }
+    }
+
+    private void TryGrabWall()
+    {
+        RaycastHit hit;
+        Vector3 origin = transform.position + Vector3.up * grabHeightOffset;
+        Vector3 dir = transform.forward;
+
+        if(Physics.Raycast(origin, dir, out hit, wallCheckDistance, wallLayer))
+        {
+            isHanging = true;
+            rigid.useGravity = false;
+            rigid.velocity = Vector3.zero;
+
+            Vector3 offset = hit.normal * wallOffsetDistance;
+            transform.rotation = Quaternion.LookRotation(-offset);
+
+
+            Debug.Log("벽에 매달림!");
+        }
+        else
+        {
+            isHanging = false;
+            rigid.useGravity = true;
+        }
+    }
+    private void HandleClimbing()
+    {
+        //transform.position += (curMovementInput.y * transform.up * climbSpeed * Time.deltaTime) 
+        //    + (curMovementInput.x * transform.right * climbSpeed * Time.deltaTime);
+
+        //if(isMoving)
+        //{
+        //    rigid.AddForce(curMovementInput * climbSpeed * Time.deltaTime, ForceMode.VelocityChange);
+        //}
+        //else
+        //{
+        //    rigid.velocity = Vector3.zero; // 입력이 없으면 즉시 정지
+        //}
+
+        Vector3 upwardMovement = curMovementInput.y * transform.up * climbSpeed;
+        Vector3 sidewaysMovement = curMovementInput.x * transform.right * climbSpeed;
+        if (isMoving)
+        {
+            rigid.AddForce(upwardMovement + sidewaysMovement, ForceMode.VelocityChange);
+        }
+        else
+        {
+            rigid.velocity = Vector3.zero; // 입력이 없으면 즉시 정지
+        }
+
     }
 
     public void OnInventoryButton(InputAction.CallbackContext callbackContext)

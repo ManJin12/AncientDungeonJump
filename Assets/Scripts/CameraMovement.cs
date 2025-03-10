@@ -33,6 +33,7 @@ public class CameraMovement : MonoBehaviour
     private Vector2 mouseDelta; // ¸¶¿ì½º ÀÎÇ²
 
     public CameraMode ECurrentCameraMode = CameraMode.FirstPerson;
+    public PlayerController playerController;
 
     private void Start()
     {
@@ -41,7 +42,7 @@ public class CameraMovement : MonoBehaviour
 
     private void Update()
     {
-        if(ECurrentCameraMode == CameraMode.FirstPerson)
+        if (ECurrentCameraMode == CameraMode.FirstPerson && !playerController.isHanging)
         {
             rotX += mouseDelta.y * lookSensitivity * Time.deltaTime;
             rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
@@ -49,8 +50,13 @@ public class CameraMovement : MonoBehaviour
 
             rotY += mouseDelta.x * lookSensitivity * Time.deltaTime;
             Player.eulerAngles = new Vector3(0, rotY, 0);
-
-
+        }
+        else if (ECurrentCameraMode == CameraMode.FirstPerson && playerController.isHanging)
+        {
+            rotX += mouseDelta.y * lookSensitivity * Time.deltaTime;
+            rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
+            rotY += mouseDelta.x * lookSensitivity * Time.deltaTime;
+            transform.localEulerAngles = new Vector3(-rotX, rotY, 0);
         }
         else
         {
