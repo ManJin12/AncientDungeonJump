@@ -21,6 +21,7 @@ public class ObjectData : ScriptableObject
     public bool canMave;
     public float moveSpeed;
     public bool loopMovement;
+    public float loopTime;
 
     [Header("JumpPad")]
     public bool canJump;
