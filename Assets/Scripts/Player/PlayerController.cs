@@ -17,9 +17,9 @@ public class PlayerController : MonoBehaviour
     public bool isMoving = false;
 
     [Header("Look")]
-
     private Vector3 lookDir = Vector3.zero;
-
+    public float lookSpeed = 3f;
+    private CameraMovement cameraMovement;
 
     private Rigidbody rigid;
     private Animator anim;
@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
         condition = GetComponent<PlayerCondition>();
+        cameraMovement = GetComponentInChildren<CameraMovement>();
     }
 
     private void FixedUpdate()
@@ -63,6 +64,7 @@ public class PlayerController : MonoBehaviour
         else if(context.phase == InputActionPhase.Canceled)
         {
             curMovementInput = Vector2.zero;
+            lookDir = Vector3.zero;
             isMoving = false;
         }
     }
@@ -106,20 +108,35 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        lookDir.x = curMovementInput.x;
-        lookDir.z = curMovementInput.y;
-
-        if (lookDir != Vector3.zero)
-        {
-            transform.forward = lookDir;
-        }
-
-        Vector3 dir = transform.forward * lookDir.z + transform.right * lookDir.x;
         float speed = condition.Run ? moveSpeed * dashPower : moveSpeed;
-        dir *= speed;
-        dir.y = rigid.velocity.y;
 
-        rigid.velocity = dir;
+        if (cameraMovement.ECurrentCameraMode == CameraMode.FirstPerson)
+        {
+            Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
+
+            dir *= speed;
+            dir.y = rigid.velocity.y;
+
+            rigid.velocity = dir;
+        }
+        else
+        {
+            lookDir.x = curMovementInput.x;
+            lookDir.z = curMovementInput.y;
+            lookDir.Normalize();
+
+            if (lookDir != Vector3.zero)
+            {
+                if (Mathf.Sign(transform.forward.x) != Mathf.Sign(lookDir.x) || Mathf.Sign(transform.forward.z) != Mathf.Sign(lookDir.z))
+                {
+                    transform.Rotate(0, 1, 0);
+                }
+
+                transform.forward = Vector3.Lerp(transform.forward, lookDir, lookSpeed * Time.deltaTime);
+            }
+
+            rigid.MovePosition(transform.position + lookDir * speed * Time.deltaTime);
+        }
     }
 
     public void OnJumpInput(InputAction.CallbackContext context)
