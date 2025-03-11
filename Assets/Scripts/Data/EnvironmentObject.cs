@@ -71,7 +71,7 @@ public class EnvironmentObject : MonoBehaviour, IInteractable
         float elapsedTime = 0f;
         float moveDuration = 5f;
         canMove = true;
-        // Move to target position
+
         while (elapsedTime < moveDuration)
         {
             elapsedTime += Time.deltaTime;
@@ -80,9 +80,8 @@ public class EnvironmentObject : MonoBehaviour, IInteractable
             yield return null;
         }
 
-        Debug.Log(1);
         yield return new WaitForSeconds(5.0f);
-        Debug.Log(2);
+
         elapsedTime = 0f;
         while (elapsedTime < moveDuration)
         {

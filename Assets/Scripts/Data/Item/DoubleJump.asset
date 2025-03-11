@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 525b8ac530324574ba8d047bd8b3da07, type: 3}
   m_Name: DoubleJump
   m_EditorClassIdentifier: 
-  objectName: 
-  objectDescription: 
-  EItemType: 0
-  icon: {fileID: 0}
+  objectName: "\uB354\uBE14 \uC810\uD504"
+  objectDescription: "\uC0AC\uC6A9 \uC2DC 5\uCD08 \uB3D9\uC548 \uB354\uBE14 \uC810\uD504\uAC00
+    \uAC00\uB2A5 \uD569\uB2C8\uB2E4"
+  EItemType: 3
+  icon: {fileID: 21300000, guid: ccf96abbc09dc7a498f81bd3e411334a, type: 3}
   value: 0
-  duration: 0
+  duration: 5
   maxStackAmount: 0
   canStack: 0

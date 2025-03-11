@@ -25,20 +25,20 @@ public class PlayerController : MonoBehaviour
 
     [Header("Jump")]
     public bool isJumping = false; // 점프 중인지 체크
-    public bool doublejump = false; 
+    public bool doublejump = false; // 이단 점프 가능 여부
     private float lastGroundTime;
     private float jumpDelay = 0.1f;
 
     [Header("Wall")]
-    public float wallCheckDistance = 1.0f;
-    public LayerMask wallLayer;
-    public float grabHeightOffset = 1.5f;
-    public float wallOffsetDistance = 0.5f;
-    public bool wallCheck = false;
+    public float wallCheckDistance = 1.0f; // 벽 감지 거리
+    public LayerMask wallLayer; // 벽 감지 레이어
+    public float grabHeightOffset = 1.5f; // 벽 매달리기 감지 높이
+    public float wallOffsetDistance = 0.5f; // 벽에서 떨어지는 거리
+    public bool wallCheck = false; // 벽 감지 여부
 
-    public float climbSpeed = 2.0f;
-    public bool isHanging = false;
-    public bool isClimbing = false;
+    public float climbSpeed = 2.0f; // 벽 오르기 속도
+    public bool isHanging = false; // 벽 매달림 여부
+    public bool isClimbing = false; // 벽 오르기 여부
 
     private Rigidbody rigid;
     private Animator anim;
@@ -118,12 +118,7 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("IsRun", true);
             anim.SetBool("IsWalk", false);
         }
-        else if(isMoving && isDash && !condition.Run)
-        {
-            anim.SetBool("IsWalk", true);
-            anim.SetBool("IsRun", false);
-        }
-        else if(isMoving && !isDash && !condition.Run)
+        else if(isMoving)
         {
             anim.SetBool("IsWalk", true);
             anim.SetBool("IsRun", false);
@@ -183,18 +178,13 @@ public class PlayerController : MonoBehaviour
                 isJumping = true;
                 doublejump = true;
                 lastGroundTime = Time.time;
-            }
-             
-
-
-
+            }          
         }
 
         if(context.phase == InputActionPhase.Started && isHanging)
         {
             isHanging = false;
             rigid.AddForce((Vector3.up) * jumpPower, ForceMode.Impulse);
-            Debug.Log(1);
         }
     }
     
@@ -227,9 +217,8 @@ public class PlayerController : MonoBehaviour
 
     void DebugGroundCheck()
     {
-        // Ray를 씬 뷰에서 보이게 하기 위한 길이
-        float rayLength = 0.3f; // 기존보다 길이 늘림
-        Color rayColor = Color.green; // 보기 편하게 초록색 지정
+        float rayLength = 0.3f; 
+        Color rayColor = Color.green;
 
         // 4방향으로 Ray 설정
         Vector3[] rayOrigins = new Vector3[4]
