@@ -121,6 +121,10 @@ public class UIInventory : MonoBehaviour
                 playerCondition.AddStamina(slots[useIndex].item.value);
                 ReMoveItem(useIndex);
                 break;
+            case ItemType.DoubleJump:
+                playerCondition.Jumping(slots[useIndex].item.duration);
+                ReMoveItem(useIndex);
+                break;
         }
     }
 

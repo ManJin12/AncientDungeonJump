@@ -14,6 +14,8 @@ public class PlayerCondition : MonoBehaviour
     private float lastStaminaUseTime;
     public bool isStaminaDepleted = false; // 스태미나가 0인지 여부
 
+    public bool isDoubleJumping = false;
+
 
     private void Start()
     {
@@ -70,6 +72,18 @@ public class PlayerCondition : MonoBehaviour
         yield return new WaitForSeconds(duration);
 
         controller.moveSpeed = originalSpeed;
+    }
+
+    public void Jumping(float duration)
+    {
+        StartCoroutine(DoubleJump(duration));
+    }
+
+    private IEnumerator DoubleJump(float duration)
+    {
+        isDoubleJumping = true;
+        yield return new WaitForSeconds(duration);
+        isDoubleJumping = false;
     }
 
     public void Heal(float amount)

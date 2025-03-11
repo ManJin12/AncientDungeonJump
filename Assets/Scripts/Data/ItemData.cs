@@ -8,7 +8,8 @@ public enum ItemType
 {
     Health,
     Speed,
-    Stamina
+    Stamina,
+    DoubleJump
 }
 
 [CreateAssetMenu(fileName = "Item", menuName = "New Item")]

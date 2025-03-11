@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Jump")]
     public bool isJumping = false; // 점프 중인지 체크
+    public bool doublejump = false; 
     private float lastGroundTime;
     private float jumpDelay = 0.1f;
 
@@ -166,13 +167,27 @@ public class PlayerController : MonoBehaviour
 
     public void OnJumpInput(InputAction.CallbackContext context)
     {
-        if(context.phase == InputActionPhase.Started && IsGrounded())
+        if(context.phase == InputActionPhase.Started)
         {
-            rigid.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
-            
-            anim.SetTrigger("IsJump");
-            isJumping = true;
-            lastGroundTime = Time.time;
+            if (IsGrounded())
+            {
+                rigid.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
+                anim.SetTrigger("IsJump");
+                isJumping = true;
+                lastGroundTime = Time.time;
+            }
+            else if(!IsGrounded() && isJumping && condition.isDoubleJumping && !doublejump)
+            {
+                rigid.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
+                anim.SetTrigger("IsJump");
+                isJumping = true;
+                doublejump = true;
+                lastGroundTime = Time.time;
+            }
+             
+
+
+
         }
 
         if(context.phase == InputActionPhase.Started && isHanging)
@@ -202,6 +217,7 @@ public class PlayerController : MonoBehaviour
             if (Physics.Raycast(rays[i], rayLength, groundLayerMask))
             {
                 lastGroundTime = Time.time; // 땅에 닿은 시간 업데이트
+                doublejump = false;
                 return true;
             }
         }
